@@ -1,13 +1,14 @@
 package com.alumni.management.controller;
 
-import com.alumni.management.entity.Alumni;
+import com.alumni.management.dto.AlumniRequestDTO;
+import com.alumni.management.dto.AlumniResponseDTO;
 import com.alumni.management.service.AlumniService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/alumni")
@@ -16,32 +17,48 @@ public class AlumniController {
     @Autowired
     private AlumniService alumniService;
 
-    // ✅ Create Alumni
     @PostMapping
-    public ResponseEntity<Alumni> createAlumni(@Valid @RequestBody Alumni alumni) {
-        return ResponseEntity.ok(alumniService.createAlumni(alumni));
+    public ResponseEntity<AlumniResponseDTO> createAlumni(
+            @Valid @RequestBody AlumniRequestDTO dto) {
+
+        return ResponseEntity.ok(alumniService.createAlumni(dto));
     }
 
-    // ✅ Get All Alumni
     @GetMapping
-    public ResponseEntity<List<Alumni>> getAllAlumni() {
-        return ResponseEntity.ok(alumniService.getAllAlumni());
+    public ResponseEntity<Page<AlumniResponseDTO>> getAllAlumni(Pageable pageable) {
+        return ResponseEntity.ok(alumniService.getAllAlumni(pageable));
     }
 
-    // ✅ Get Alumni By ID
+    @GetMapping("/search")
+    public ResponseEntity<Page<AlumniResponseDTO>> searchAlumni(
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String department,
+            @RequestParam(required = false) Integer graduationYear,
+            Pageable pageable) {
+
+        return ResponseEntity.ok(
+                alumniService.searchAlumni(
+                        firstName,
+                        email,
+                        department,
+                        graduationYear,
+                        pageable));
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<Alumni> getAlumniById(@PathVariable Long id) {
+    public ResponseEntity<AlumniResponseDTO> getAlumniById(@PathVariable Long id) {
         return ResponseEntity.ok(alumniService.getAlumniById(id));
     }
 
-    // ✅ Update Alumni
     @PutMapping("/{id}")
-    public ResponseEntity<Alumni> updateAlumni(@PathVariable Long id,
-            @Valid @RequestBody Alumni alumni) {
-        return ResponseEntity.ok(alumniService.updateAlumni(id, alumni));
+    public ResponseEntity<AlumniResponseDTO> updateAlumni(
+            @PathVariable Long id,
+            @Valid @RequestBody AlumniRequestDTO dto) {
+
+        return ResponseEntity.ok(alumniService.updateAlumni(id, dto));
     }
 
-    // ✅ Delete Alumni
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAlumni(@PathVariable Long id) {
         alumniService.deleteAlumni(id);

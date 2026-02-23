@@ -1,51 +1,29 @@
-package com.alumni.management.entity;
+package com.alumni.management.dto;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-@Entity
-@Table(name = "alumni")
-public class Alumni {
+public class AlumniRequestDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotBlank(message = "First name is required")
-    @Column(nullable = false)
+    @NotBlank
     private String firstName;
 
-    @NotBlank(message = "Last name is required")
-    @Column(nullable = false)
+    @NotBlank
     private String lastName;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Invalid email format")
-    @Column(unique = true, nullable = false)
+    @Email
+    @NotBlank
     private String email;
 
-    @NotBlank(message = "Phone is required")
     private String phone;
 
-    @NotNull(message = "Graduation year is required")
+    @NotNull
     private Integer graduationYear;
 
-    @NotBlank(message = "Department is required")
     private String department;
 
-    @NotBlank(message = "Current company is required")
     private String currentCompany;
-
-    public Alumni() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getFirstName() {
         return firstName;
