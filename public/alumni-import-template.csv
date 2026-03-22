@@ -1,0 +1,9 @@
+Name,Email,Phone,Graduation Year,Branch,Current Position,Company,Location,LinkedIn URL
+"John Doe","john.doe@example.com","+1-555-0001","2020","CS","Software Engineer","Tech Solutions Inc","San Francisco, CA","https://linkedin.com/in/johndoe"
+"Jane Smith","jane.smith@example.com","+1-555-0002","2019","IT","Systems Administrator","Innovation Labs","New York, NY","https://linkedin.com/in/janesmith"
+"Michael Johnson","michael.j@example.com","+1-555-0003","2021","AIDS","AI/ML Engineer","AI Ventures","Boston, MA","https://linkedin.com/in/michaelj"
+"Emily Rodriguez","emily.r@example.com","+1-555-0004","2018","ECE","Hardware Engineer","Global Electronics","Chicago, IL","https://linkedin.com/in/emilyr"
+"David Chen","david.chen@example.com","+1-555-0005","2019","ENTC","Telecom Engineer","TeleCom Corp","Detroit, MI",""
+"Sarah Williams","sarah.w@example.com","+1-555-0006","2020","CS","Senior Developer","Tech Solutions","Los Angeles, CA","https://linkedin.com/in/sarahw"
+"James Martinez","james.m@example.com","+1-555-0007","2017","ECE","Electronics Engineer","Power Systems","Seattle, WA","https://linkedin.com/in/jamesm"
+"Lisa Thompson","lisa.t@example.com","+1-555-0008","2019","IT","Network Engineer","Enterprise Networks","Houston, TX","https://linkedin.com/in/lisat"
