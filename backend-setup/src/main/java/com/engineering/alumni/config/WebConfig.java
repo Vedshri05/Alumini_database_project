@@ -14,18 +14,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                // Allow requests from Next.js development server
-                .allowedOrigins(
-                    "http://localhost:3000",
-                    "http://localhost:3001",
-                    "http://localhost:3002",
-                    "http://10.30.95.12:3001",
-                    "http://10.30.95.12:3002",
-                    "https://your-production-domain.com" // Update with your production URL
-                )
+                .allowedOriginPatterns("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
-                .allowCredentials(true)
-                .maxAge(3600); // Cache preflight response for 1 hour
+                .allowCredentials(false)
+                .maxAge(3600);
     }
 }
