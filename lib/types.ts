@@ -40,16 +40,17 @@ export interface Event {
   id: string;
   title: string;
   description: string;
-  eventType: 'reunion' | 'workshop' | 'webinar' | 'networking' | 'other';
-  date: Date;
-  startTime: string;
-  endTime: string;
+  eventType: 'REUNION' | 'WORKSHOP' | 'WEBINAR' | 'NETWORKING' | 'SEMINAR';
+  eventDate: string;
+  date?: string;
+  startTime?: string;
+  endTime?: string;
   location?: string;
   capacity?: number;
   registeredCount: number;
-  status: 'draft' | 'published' | 'ongoing' | 'completed' | 'cancelled';
-  createdAt: Date;
-  updatedAt: Date;
+  status: 'DRAFT' | 'PUBLISHED' | 'ONGOING' | 'COMPLETED' | 'CANCELLED';
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface EventRegistration {

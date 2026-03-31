@@ -22,6 +22,7 @@ com\engineering\alumni\dto\LoginRequest.class
 com\engineering\alumni\repository\UserRepository.class
 com\engineering\alumni\dto\EventStatisticsDTO$Builder.class
 com\engineering\alumni\repository\AttendanceRepository.class
+com\engineering\alumni\controller\ChatbotController.class
 com\engineering\alumni\AlumniManagementApplication$1.class
 com\engineering\alumni\controller\WebSocketChatController.class
 com\engineering\alumni\dto\AttendanceStatisticsDTO$Builder.class
@@ -36,6 +37,7 @@ com\engineering\alumni\service\MentorshipService.class
 com\engineering\alumni\entity\Attendance$Builder.class
 com\engineering\alumni\controller\ChatController.class
 com\engineering\alumni\entity\User.class
+com\engineering\alumni\entity\EventRegistration.class
 com\engineering\alumni\repository\MentorshipRequestRepository.class
 com\engineering\alumni\repository\AlumniRepository.class
 com\engineering\alumni\entity\Attendance.class
@@ -54,6 +56,8 @@ com\engineering\alumni\service\AuthService$SignupRequiredException.class
 com\engineering\alumni\AlumniManagementApplication.class
 com\engineering\alumni\entity\Alumni$EngineeringBranch.class
 com\engineering\alumni\entity\Event.class
+com\engineering\alumni\controller\EventRegistrationController.class
+com\engineering\alumni\repository\EventRegistrationRepository.class
 com\engineering\alumni\entity\ChatMessage.class
 com\engineering\alumni\service\AlumniService.class
 com\engineering\alumni\dto\AttendanceDTO.class

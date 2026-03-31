@@ -22,7 +22,6 @@ export function EventsManager() {
     location: '',
     capacity: '',
   });
-
   useEffect(() => {
     loadEvents();
   }, []);
@@ -91,7 +90,17 @@ export function EventsManager() {
 
   const handleStatusChange = async (id: string, status: string) => {
     try {
-      await apiClient.updateEvent(id, { status });
+      const event = events.find(e => e.id === id);
+      if (!event) return;
+      await apiClient.updateEvent(id, {
+        title: event.title,
+        description: event.description,
+        eventDate: event.eventDate || event.date,
+        eventType: event.eventType,
+        location: event.location,
+        capacity: event.capacity,
+        status,
+      });
       setEvents(events.map(e => (e.id === id ? { ...e, status } : e)));
     } catch (err) {
       console.error('Failed to update event status:', err);
@@ -132,12 +141,12 @@ export function EventsManager() {
     );
   }
 
-  const upcomingEvents = events.filter(e => new Date(e.date) > new Date()).sort((a, b) => 
-    new Date(a.date).getTime() - new Date(b.date).getTime()
+  const upcomingEvents = events.filter(e => new Date(e.eventDate || e.date) > new Date()).sort((a, b) => 
+    new Date(a.eventDate || a.date).getTime() - new Date(b.eventDate || b.date).getTime()
   );
 
-  const pastEvents = events.filter(e => new Date(e.date) <= new Date()).sort((a, b) => 
-    new Date(b.date).getTime() - new Date(a.date).getTime()
+  const pastEvents = events.filter(e => new Date(e.eventDate || e.date) <= new Date()).sort((a, b) => 
+    new Date(b.eventDate || b.date).getTime() - new Date(a.eventDate || a.date).getTime()
   );
 
   return (
@@ -172,11 +181,11 @@ export function EventsManager() {
                 onChange={(e) => setFormData({ ...formData, eventType: e.target.value as any })}
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="reunion">Reunion</option>
-                <option value="workshop">Workshop</option>
-                <option value="webinar">Webinar</option>
-                <option value="networking">Networking</option>
-                <option value="other">Other</option>
+                <option value="REUNION">Reunion</option>
+                <option value="WORKSHOP">Workshop</option>
+                <option value="WEBINAR">Webinar</option>
+                <option value="NETWORKING">Networking</option>
+                <option value="SEMINAR">Seminar</option>
               </select>
             </div>
 
@@ -273,7 +282,7 @@ export function EventsManager() {
                   <div className="space-y-2 text-sm mb-4">
                     <div className="flex items-center gap-2 text-gray-700">
                       <Calendar className="w-4 h-4" />
-                      <span>{new Date(event.date).toLocaleDateString()} • {event.startTime}-{event.endTime}</span>
+                      <span>{new Date(event.eventDate || event.date).toLocaleDateString()} • {event.startTime}-{event.endTime}</span>
                     </div>
                     {event.location && (
                       <div className="flex items-center gap-2 text-gray-700">
@@ -292,9 +301,9 @@ export function EventsManager() {
                     onChange={(e) => handleStatusChange(event.id, e.target.value as Event['status'])}
                     className="w-full px-3 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    <option value="draft">Draft</option>
-                    <option value="published">Published</option>
-                    <option value="ongoing">Ongoing</option>
+                    <option value="DRAFT">Draft</option>
+                    <option value="PUBLISHED">Published</option>
+                    <option value="ONGOING">Ongoing</option>
                   </select>
                 </div>
               ))}
@@ -309,7 +318,7 @@ export function EventsManager() {
               {pastEvents.map(event => (
                 <div key={event.id} className="bg-gray-50 rounded-lg border border-gray-200 p-4">
                   <h3 className="font-semibold text-lg">{event.title}</h3>
-                  <p className="text-sm text-gray-500 mb-2">{new Date(event.date).toLocaleDateString()}</p>
+                  <p className="text-sm text-gray-500 mb-2">{new Date(event.eventDate || event.date).toLocaleDateString()}</p>
                   <p className="text-sm text-gray-600 line-clamp-2 mb-4">{event.description}</p>
                   <button
                     onClick={() => handleDelete(event.id)}
