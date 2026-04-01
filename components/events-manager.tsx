@@ -3,7 +3,7 @@
 import React from "react"
 
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Calendar, MapPin, Users, RefreshCw, AlertCircle } from 'lucide-react';
+import { Plus, Trash2, Calendar, MapPin, Users, RefreshCw, AlertCircle, Link, Copy, Check } from 'lucide-react';
 import { apiClient } from '@/lib/api-client';
 import { Event } from '@/lib/types';
 
@@ -12,6 +12,7 @@ export function EventsManager() {
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -106,6 +107,14 @@ export function EventsManager() {
       console.error('Failed to update event status:', err);
       alert('Failed to update event status');
     }
+  };
+
+  const copyLink = (eventId: string, eventTitle: string) => {
+    const link = `${window.location.origin}/student-dashboard?tab=events&highlight=${eventId}`;
+    navigator.clipboard.writeText(link).then(() => {
+      setCopiedId(eventId);
+      setTimeout(() => setCopiedId(null), 2500);
+    });
   };
 
   if (loading) {
@@ -305,6 +314,22 @@ export function EventsManager() {
                     <option value="PUBLISHED">Published</option>
                     <option value="ONGOING">Ongoing</option>
                   </select>
+
+                  {/* Share Link */}
+                  <button
+                    onClick={() => copyLink(event.id, event.title)}
+                    className={`mt-2 w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium border transition-all ${
+                      copiedId === event.id
+                        ? 'bg-green-50 border-green-300 text-green-700'
+                        : 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100'
+                    }`}
+                  >
+                    {copiedId === event.id ? (
+                      <><Check className="w-4 h-4" /> Link Copied!</>
+                    ) : (
+                      <><Link className="w-4 h-4" /> Copy Share Link</>
+                    )}
+                  </button>
                 </div>
               ))}
             </div>

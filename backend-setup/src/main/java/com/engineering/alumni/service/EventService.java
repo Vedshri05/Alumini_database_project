@@ -4,6 +4,7 @@ import com.engineering.alumni.dto.EventDTO;
 import com.engineering.alumni.dto.EventStatisticsDTO;
 import com.engineering.alumni.entity.Event;
 import com.engineering.alumni.repository.EventRepository;
+import com.engineering.alumni.repository.EventRegistrationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,11 @@ import java.util.stream.Collectors;
 public class EventService {
     private static final Logger log = LoggerFactory.getLogger(EventService.class);
     private final EventRepository eventRepository;
+    private final EventRegistrationRepository eventRegistrationRepository;
 
-    public EventService(EventRepository eventRepository) {
+    public EventService(EventRepository eventRepository, EventRegistrationRepository eventRegistrationRepository) {
         this.eventRepository = eventRepository;
+        this.eventRegistrationRepository = eventRegistrationRepository;
     }
 
     // Get all events
@@ -71,10 +74,14 @@ public class EventService {
     // Delete event
     public void deleteEvent(String id) {
         log.info("Deleting event with ID: {}", id);
-        
+
         if (!eventRepository.existsById(id)) {
             throw new RuntimeException("Event not found with ID: " + id);
         }
+
+        // Delete related registrations first to avoid FK constraint violation
+        eventRegistrationRepository.findByEventId(id).forEach(r ->
+            eventRegistrationRepository.deleteById(r.getId()));
 
         eventRepository.deleteById(id);
     }

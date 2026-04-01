@@ -34,6 +34,8 @@ export default function AlumniDashboard() {
   const [sending, setSending] = useState(false);
   const [jobForm, setJobForm] = useState({ title: '', company: '', description: '', location: '', skills: '', type: 'Full-time' });
   const [events, setEvents] = useState<any[]>([]);
+  const [showEditProfile, setShowEditProfile] = useState(false);
+  const [profileForm, setProfileForm] = useState<any>({ name: '', phone: '', branch: '', graduationYear: '' });
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
@@ -555,7 +557,16 @@ export default function AlumniDashboard() {
           {/* ── PROFILE ── */}
           {tab === 'profile' && (
             <div className="space-y-5 max-w-lg">
-              <h1 className="text-2xl font-bold text-gray-900">My Profile</h1>
+              <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold text-gray-900">My Profile</h1>
+                <button onClick={() => {
+                  setProfileForm({ name: user?.name || '', phone: user?.phone || '', branch: user?.branch || '', graduationYear: user?.graduationYear?.toString() || '' });
+                  setShowEditProfile(true);
+                }}
+                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors">
+                  Edit Profile
+                </button>
+              </div>
               <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
                 <div className="flex items-center gap-5 mb-6">
                   <div className={`w-20 h-20 ${getBg(user?.email || '')} rounded-3xl flex items-center justify-center text-4xl shadow-lg`}>
@@ -581,6 +592,52 @@ export default function AlumniDashboard() {
                   ))}
                 </div>
               </div>
+
+              {/* Edit Profile Modal */}
+              {showEditProfile && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                  <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm">
+                    <div className="flex items-center justify-between mb-5">
+                      <h3 className="font-bold text-gray-900 text-lg">Edit Profile</h3>
+                      <button onClick={() => setShowEditProfile(false)}
+                        className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center">
+                        <X className="w-4 h-4 text-gray-500" />
+                      </button>
+                    </div>
+                    <div className="space-y-3">
+                      {[
+                        { key: 'name', label: 'Full Name', placeholder: user?.name || '' },
+                        { key: 'graduationYear', label: 'Graduation Year', placeholder: 'e.g. 2020' },
+                        { key: 'branch', label: 'Degree & Branch', placeholder: 'e.g. CS, IT, ENTC' },
+                        { key: 'currentPosition', label: 'Current Job Role', placeholder: 'e.g. Senior Engineer' },
+                        { key: 'company', label: 'Company / Organization', placeholder: 'e.g. Infosys' },
+                        { key: 'workExperience', label: 'Work Experience (years)', placeholder: 'e.g. 5' },
+                        { key: 'location', label: 'Location', placeholder: 'e.g. Mumbai, India' },
+                        { key: 'linkedinUrl', label: 'LinkedIn / Professional Profile', placeholder: 'https://linkedin.com/in/...' },
+                        { key: 'skills', label: 'Skills & Expertise', placeholder: 'e.g. Java, Spring Boot, AWS' },
+                        { key: 'phone', label: 'Phone', placeholder: 'Your phone number' },
+                      ].map(f => (
+                        <div key={f.key}>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">{f.label}</label>
+                          <input placeholder={f.placeholder}
+                            value={(profileForm as any)[f.key] || ''}
+                            onChange={e => setProfileForm((p: any) => ({ ...p, [f.key]: e.target.value }))}
+                            className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        </div>
+                      ))}
+                      <button onClick={async () => {
+                        if (!user) return;
+                        const r = await interactionApi.updateProfile(user.email, profileForm);
+                        if (r.success) { showToast('Profile updated!'); setShowEditProfile(false); }
+                        else showToast('Failed to update', 'error');
+                      }}
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl text-sm transition-colors">
+                        Save Changes
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

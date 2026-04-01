@@ -35,6 +35,24 @@ public class User {
     @Column
     private String provider;
 
+    @Column
+    private String currentPosition;
+
+    @Column
+    private String company;
+
+    @Column
+    private Integer workExperience;
+
+    @Column
+    private String location;
+
+    @Column
+    private String linkedinUrl;
+
+    @Column(columnDefinition = "TEXT")
+    private String skills;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -58,5 +76,17 @@ public class User {
     public void setPhone(String phone) { this.phone = phone; }
     public String getProvider() { return provider; }
     public void setProvider(String provider) { this.provider = provider; }
+    public String getCurrentPosition() { return currentPosition; }
+    public void setCurrentPosition(String currentPosition) { this.currentPosition = currentPosition; }
+    public String getCompany() { return company; }
+    public void setCompany(String company) { this.company = company; }
+    public Integer getWorkExperience() { return workExperience; }
+    public void setWorkExperience(Integer workExperience) { this.workExperience = workExperience; }
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
+    public String getLinkedinUrl() { return linkedinUrl; }
+    public void setLinkedinUrl(String linkedinUrl) { this.linkedinUrl = linkedinUrl; }
+    public String getSkills() { return skills; }
+    public void setSkills(String skills) { this.skills = skills; }
     public LocalDateTime getCreatedAt() { return createdAt; }
 }

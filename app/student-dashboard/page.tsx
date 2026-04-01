@@ -10,7 +10,7 @@ import {
   BookOpen, Sparkles, TrendingUp, MapPin, Calendar, Star, Filter,
   ArrowRight, Zap, Award, Heart
 } from 'lucide-react';
-type Tab = 'dashboard' | 'alumni' | 'mentorship' | 'chat' | 'jobs' | 'events';
+type Tab = 'dashboard' | 'alumni' | 'mentorship' | 'chat' | 'jobs' | 'events' | 'profile';
 
 const BRANCH_COLORS: Record<string, string> = {
   CS: 'bg-blue-100 text-blue-700',
@@ -41,7 +41,10 @@ export default function StudentDashboard() {
   const [branchFilter, setBranchFilter] = useState('ALL');
   const [mentorMsg, setMentorMsg] = useState('');
   const [selectedAlumni, setSelectedAlumni] = useState<any>(null);
+  const [viewProfile, setViewProfile] = useState<any>(null);
   const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
+  const [editProfile, setEditProfile] = useState(false);
+  const [profileForm, setProfileForm] = useState({ name: '', phone: '', branch: '', graduationYear: '' });
   const [sending, setSending] = useState(false);
   const [events, setEvents] = useState<any[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -134,6 +137,7 @@ export default function StudentDashboard() {
     { id: 'chat' as Tab, label: 'Messages', icon: MessageCircle },
     { id: 'jobs' as Tab, label: 'Jobs', icon: Briefcase },
     { id: 'events' as Tab, label: 'Events', icon: Calendar },
+    { id: 'profile' as Tab, label: 'Profile', icon: User },
   ];
 
   return (
@@ -351,6 +355,11 @@ export default function StudentDashboard() {
                       <div className="flex-1 min-w-0">
                         <p className="font-bold text-gray-900 truncate">{a.name}</p>
                         <p className="text-xs text-gray-500 truncate">{a.email}</p>
+                        {(a.currentPosition || a.company) && (
+                          <p className="text-xs text-blue-600 truncate mt-0.5">
+                            {a.currentPosition}{a.currentPosition && a.company ? ' @ ' : ''}{a.company}
+                          </p>
+                        )}
                         <div className="flex items-center gap-2 mt-1.5">
                           <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${BRANCH_COLORS[a.branch] || 'bg-gray-100 text-gray-600'}`}>
                             {a.branch}
@@ -361,7 +370,7 @@ export default function StudentDashboard() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 mb-2">
                       <button onClick={() => setSelectedAlumni(a)}
                         className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1.5">
                         <Zap className="w-3.5 h-3.5" /> Request Mentorship
@@ -371,10 +380,81 @@ export default function StudentDashboard() {
                         <MessageCircle className="w-4 h-4 text-gray-500" />
                       </button>
                     </div>
+                    <button onClick={() => setViewProfile(a)}
+                      className="w-full border border-gray-200 hover:border-blue-300 hover:bg-blue-50 text-gray-600 hover:text-blue-700 text-xs font-medium py-2 rounded-xl transition-colors flex items-center justify-center gap-1.5">
+                      <User className="w-3.5 h-3.5" /> View Profile
+                    </button>
                   </div>
                 ))}
               </div>
 
+              {/* Alumni Profile Modal */}
+              {viewProfile && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                  <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm">
+                    <div className="flex items-center justify-between mb-5">
+                      <h3 className="font-bold text-gray-900 text-lg">Alumni Profile</h3>
+                      <button onClick={() => setViewProfile(null)}
+                        className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center">
+                        <X className="w-4 h-4 text-gray-500" />
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-4 mb-5">
+                      <div className={`w-16 h-16 ${getBg(viewProfile.email)} rounded-2xl flex items-center justify-center text-3xl shrink-0`}>
+                        {getAvatar(viewProfile.email)}
+                      </div>
+                      <div>
+                        <p className="font-bold text-gray-900 text-lg">{viewProfile.name}</p>
+                        <p className="text-xs text-gray-500">{viewProfile.email}</p>
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium mt-1 inline-block ${BRANCH_COLORS[viewProfile.branch] || 'bg-gray-100 text-gray-600'}`}>
+                          {viewProfile.branch} · Class of {viewProfile.graduationYear}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="space-y-3 bg-gray-50 rounded-xl p-4 mb-4">
+                      {viewProfile.currentPosition && (
+                        <div className="flex items-center gap-2 text-sm">
+                          <Briefcase className="w-4 h-4 text-blue-500 shrink-0" />
+                          <span className="text-gray-700 font-medium">{viewProfile.currentPosition}</span>
+                        </div>
+                      )}
+                      {viewProfile.company && (
+                        <div className="flex items-center gap-2 text-sm">
+                          <Award className="w-4 h-4 text-blue-500 shrink-0" />
+                          <span className="text-gray-700">{viewProfile.company}</span>
+                        </div>
+                      )}
+                      {viewProfile.location && (
+                        <div className="flex items-center gap-2 text-sm">
+                          <MapPin className="w-4 h-4 text-blue-500 shrink-0" />
+                          <span className="text-gray-700">{viewProfile.location}</span>
+                        </div>
+                      )}
+                      {viewProfile.phone && (
+                        <div className="flex items-center gap-2 text-sm">
+                          <Star className="w-4 h-4 text-blue-500 shrink-0" />
+                          <span className="text-gray-700">{viewProfile.phone}</span>
+                        </div>
+                      )}
+                      {!viewProfile.currentPosition && !viewProfile.company && !viewProfile.location && (
+                        <p className="text-xs text-gray-400 text-center">No additional details available</p>
+                      )}
+                    </div>
+                    <div className="flex gap-2">
+                      {viewProfile.linkedinUrl && (
+                        <a href={viewProfile.linkedinUrl} target="_blank" rel="noopener noreferrer"
+                          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-2.5 rounded-xl text-center transition-colors">
+                          View LinkedIn
+                        </a>
+                      )}
+                      <button onClick={() => { setSelectedAlumni(viewProfile); setViewProfile(null); }}
+                        className="flex-1 border border-blue-200 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold py-2.5 rounded-xl transition-colors">
+                        Request Mentorship
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
               {/* Mentorship request modal */}
               {selectedAlumni && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -719,6 +799,91 @@ export default function StudentDashboard() {
             </div>
           )}
 
+          {/* ── PROFILE ── */}
+          {tab === 'profile' && (
+            <div className="space-y-5 max-w-lg">
+              <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold text-gray-900">My Profile</h1>
+                <button onClick={() => {
+                  setProfileForm({ name: user?.name || '', phone: user?.phone || '', branch: user?.branch || '', graduationYear: user?.graduationYear?.toString() || '' });
+                  setEditProfile(true);
+                }}                  className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors">
+                  Edit Profile
+                </button>
+              </div>
+              <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
+                <div className="flex items-center gap-5 mb-6">
+                  <div className={`w-20 h-20 ${getBg(user?.email || '')} rounded-2xl flex items-center justify-center text-4xl shadow-lg`}>
+                    {getAvatar(user?.email || '')}
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold text-gray-900">{user?.name}</p>
+                    <p className="text-sm text-gray-500">{user?.email}</p>
+                    <span className="mt-1.5 inline-block text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-semibold">Student</span>
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  {[
+                    { label: 'Email', value: user?.email },
+                    { label: 'Role', value: 'Student' },
+                    { label: 'Mentorships', value: `${mentorships.length} requests` },
+                    { label: 'Jobs Applied', value: `${jobs.filter((j: any) => j.applicants?.includes(user?.email)).length}` },
+                  ].map(f => (
+                    <div key={f.label} className="flex justify-between py-3 border-b border-gray-50 last:border-0">
+                      <span className="text-sm text-gray-500">{f.label}</span>
+                      <span className="text-sm font-semibold text-gray-800">{f.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Edit Profile Modal */}
+              {editProfile && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                  <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm">
+                    <div className="flex items-center justify-between mb-5">
+                      <h3 className="font-bold text-gray-900 text-lg">Edit Profile</h3>
+                      <button onClick={() => setEditProfile(false)}
+                        className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center">
+                        <X className="w-4 h-4 text-gray-500" />
+                      </button>
+                    </div>
+                    <div className="space-y-3">
+                      {[
+                        { key: 'name', label: 'Full Name', placeholder: user?.name || '' },
+                        { key: 'graduationYear', label: 'Graduation Year', placeholder: 'e.g. 2025' },
+                        { key: 'branch', label: 'Degree & Branch', placeholder: 'e.g. CS, IT, ENTC' },
+                        { key: 'currentPosition', label: 'Current Job Role', placeholder: 'e.g. Software Engineer' },
+                        { key: 'company', label: 'Company / Organization', placeholder: 'e.g. Google' },
+                        { key: 'workExperience', label: 'Work Experience (years)', placeholder: 'e.g. 2' },
+                        { key: 'location', label: 'Location', placeholder: 'e.g. Pune, India' },
+                        { key: 'linkedinUrl', label: 'LinkedIn / Professional Profile', placeholder: 'https://linkedin.com/in/...' },
+                        { key: 'skills', label: 'Skills & Expertise', placeholder: 'e.g. React, Java, Python' },
+                        { key: 'phone', label: 'Phone', placeholder: 'Your phone number' },
+                      ].map(f => (
+                        <div key={f.key}>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">{f.label}</label>
+                          <input placeholder={f.placeholder}
+                            value={(profileForm as any)[f.key] || ''}
+                            onChange={e => setProfileForm((p: any) => ({ ...p, [f.key]: e.target.value }))}
+                            className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        </div>
+                      ))}
+                      <button onClick={async () => {
+                        if (!user) return;
+                        const r = await interactionApi.updateProfile(user.email, profileForm);
+                        if (r.success) { showToast('Profile updated!'); setEditProfile(false); }
+                        else showToast('Failed to update', 'error');
+                      }}
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl text-sm transition-colors">
+                        Save Changes
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
       <HelpChatbot role="STUDENT" />
