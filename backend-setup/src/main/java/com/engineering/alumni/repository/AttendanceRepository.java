@@ -17,7 +17,8 @@ public interface AttendanceRepository extends JpaRepository<Attendance, String> 
     List<Attendance> findByEvent(Event event);
     
     // Find attendance by alumni ID and event ID
-    Optional<Attendance> findByAlumniIdAndEventId(String alumniId, String eventId);
+    @Query("SELECT a FROM Attendance a WHERE a.alumni.sId = :alumniId AND a.event.id = :eventId")
+    Optional<Attendance> findByAlumniIdAndEventId(@Param("alumniId") String alumniId, @Param("eventId") String eventId);
     
     // Get attendance count by status for an event
     @Query("SELECT a.status, COUNT(a) FROM Attendance a WHERE a.event.id = :eventId GROUP BY a.status")
@@ -34,7 +35,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, String> 
     Double getAttendanceRateForEvent(@Param("eventId") String eventId);
     
     // Get all events attended by an alumni
-    @Query("SELECT a.event FROM Attendance a WHERE a.alumni.id = :alumniId AND a.status = 'ATTENDED'")
+    @Query("SELECT a.event FROM Attendance a WHERE a.alumni.sId = :alumniId AND a.status = 'ATTENDED'")
     List<Event> getAttendedEventsByAlumni(@Param("alumniId") String alumniId);
     
     // Get attendance records by status

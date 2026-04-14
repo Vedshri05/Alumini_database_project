@@ -1,6 +1,7 @@
 package com.engineering.alumni.repository;
 
 import com.engineering.alumni.entity.Alumni;
+import com.engineering.alumni.entity.EngineeringBranch;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,13 +17,13 @@ public interface AlumniRepository extends JpaRepository<Alumni, String> {
     Optional<Alumni> findByEmail(String email);
     
     // Find by branch
-    List<Alumni> findByBranch(Alumni.EngineeringBranch branch);
+    List<Alumni> findByBranch(EngineeringBranch branch);
     
     // Find by graduation year
     List<Alumni> findByGraduationYear(Integer year);
     
-    // Find by company
-    List<Alumni> findByCompanyContainingIgnoreCase(String company);
+    // Get alumni by branch and year
+    List<Alumni> findByBranchAndGraduationYear(EngineeringBranch branch, Integer year);
     
     // Custom query: Get alumni count by branch
     @Query("SELECT a.branch, COUNT(a) FROM Alumni a GROUP BY a.branch")
@@ -32,16 +33,12 @@ public interface AlumniRepository extends JpaRepository<Alumni, String> {
     @Query("SELECT a.graduationYear, COUNT(a) FROM Alumni a GROUP BY a.graduationYear ORDER BY a.graduationYear DESC")
     List<Object[]> getAlumniCountByYear();
     
-    // Search alumni by name, email, or company
+    // Search alumni by name or email
     @Query("SELECT a FROM Alumni a WHERE " +
-           "LOWER(a.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-           "LOWER(a.email) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-           "LOWER(a.company) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+           "LOWER(a.sName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(a.email) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     List<Alumni> searchAlumni(@Param("searchTerm") String searchTerm);
     
-    // Get alumni by branch and year
-    List<Alumni> findByBranchAndGraduationYear(Alumni.EngineeringBranch branch, Integer year);
-    
     // Count alumni by branch
-    Long countByBranch(Alumni.EngineeringBranch branch);
+    Long countByBranch(EngineeringBranch branch);
 }

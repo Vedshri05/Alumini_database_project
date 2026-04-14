@@ -1,28 +1,78 @@
 // Engineering branches
 export const ENGINEERING_BRANCHES = {
-  CS: 'Computer Science',
-  IT: 'Information Technology',
-  ENTC: 'Electronics & Telecommunication',
-  ECE: 'Electronics & Communication Engineering',
-  AIDS: 'Artificial Intelligence & Data Science',
+  CS: "Computer Science",
+  IT: "Information Technology",
+  ENTC: "Electronics & Telecommunication",
+  ECE: "Electronics & Communication Engineering",
+  AIDS: "Artificial Intelligence & Data Science",
 } as const;
 
 export type EngineeringBranch = keyof typeof ENGINEERING_BRANCHES;
 
 // Alumni data types
 export interface Alumni {
-  id: string;
-  name: string;
+  sId: string;
+  sName: string;
   email: string;
-  phone?: string;
+  phoneNo?: string;
   graduationYear: number;
   branch: EngineeringBranch;
-  currentPosition?: string;
-  company?: string;
+  linkedinProfile?: string;
+  gender?: string;
+  employment?: EmploymentDTO[];
+  higherStudies?: HigherStudiesDTO[];
+}
+
+// Company data types
+export interface Company {
+  companyId: number;
+  companyName: string;
   location?: string;
-  linkedinUrl?: string;
-  createdAt: Date;
-  updatedAt: Date;
+}
+
+// Employment data types
+export interface Employment {
+  empId: number;
+  sId: string;
+  companyId: number;
+  companyName: string;
+  position: string;
+  startDate: string;
+  endDate?: string;
+}
+
+// Employment DTO data types (from backend)
+export interface EmploymentDTO {
+  empId: number;
+  sId: string;
+  companyId: number;
+  companyName: string;
+  companyLocation?: string;
+  position: string;
+  startDate: string;
+  endDate?: string;
+}
+
+// Higher Studies data types
+export interface HigherStudies {
+  hsId: number;
+  sId: string;
+  collegeName: string;
+  location?: string;
+  domainOfStudy: string;
+  startYear: number;
+  endYear: number;
+}
+
+// Higher Studies DTO data types (from backend)
+export interface HigherStudiesDTO {
+  hsId: number;
+  sId: string;
+  collegeName: string;
+  location?: string;
+  domainOfStudy: string;
+  startYear: number;
+  endYear: number;
 }
 
 export interface AlumniImportLog {
@@ -32,7 +82,7 @@ export interface AlumniImportLog {
   totalRecords: number;
   successfulRecords: number;
   failedRecords: number;
-  status: 'pending' | 'processing' | 'completed' | 'failed';
+  status: "pending" | "processing" | "completed" | "failed";
   errors?: string[];
 }
 
@@ -40,7 +90,7 @@ export interface Event {
   id: string;
   title: string;
   description: string;
-  eventType: 'REUNION' | 'WORKSHOP' | 'WEBINAR' | 'NETWORKING' | 'SEMINAR';
+  eventType: "REUNION" | "WORKSHOP" | "WEBINAR" | "NETWORKING" | "SEMINAR";
   eventDate: string;
   date?: string;
   startTime?: string;
@@ -48,7 +98,7 @@ export interface Event {
   location?: string;
   capacity?: number;
   registeredCount: number;
-  status: 'DRAFT' | 'PUBLISHED' | 'ONGOING' | 'COMPLETED' | 'CANCELLED';
+  status: "DRAFT" | "PUBLISHED" | "ONGOING" | "COMPLETED" | "CANCELLED";
   createdAt: string;
   updatedAt: string;
 }
@@ -58,7 +108,7 @@ export interface EventRegistration {
   eventId: string;
   alumniId: string;
   registeredAt: Date;
-  rsvpStatus: 'registered' | 'confirmed' | 'attended' | 'no-show' | 'cancelled';
+  rsvpStatus: "registered" | "confirmed" | "attended" | "no-show" | "cancelled";
   attendanceQRCode?: string;
   checkedInAt?: Date;
 }

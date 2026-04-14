@@ -37,11 +37,11 @@ public class UserProfileController {
         alumniRepo.findAll().forEach(a -> {
             if (a.getEmail() != null && !added.contains(a.getEmail())) {
                 Map<String, Object> m = new LinkedHashMap<>();
-                m.put("id", a.getId()); m.put("name", a.getName()); m.put("email", a.getEmail());
+                m.put("id", a.getSId()); m.put("name", a.getSName()); m.put("email", a.getEmail());
                 m.put("branch", a.getBranch() != null ? a.getBranch().name() : null);
-                m.put("graduationYear", a.getGraduationYear()); m.put("phone", a.getPhone());
-                m.put("company", a.getCompany()); m.put("currentPosition", a.getCurrentPosition());
-                m.put("location", a.getLocation()); m.put("linkedinUrl", a.getLinkedinUrl());
+                m.put("graduationYear", a.getGraduationYear()); m.put("phone", a.getPhoneNo());
+                m.put("company", ""); m.put("currentPosition", "");
+                m.put("location", ""); m.put("linkedinUrl", a.getLinkedinProfile());
                 m.put("source", "uploaded");
                 result.add(m); added.add(a.getEmail());
             }

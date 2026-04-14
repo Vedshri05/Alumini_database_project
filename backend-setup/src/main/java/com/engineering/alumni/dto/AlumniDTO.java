@@ -1,72 +1,73 @@
 package com.engineering.alumni.dto;
 
 import com.engineering.alumni.entity.Alumni;
+import com.engineering.alumni.entity.EngineeringBranch;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.util.List;
 
 public class AlumniDTO {
-    private String id;
+    @JsonProperty("sId")
+    private String sId;
 
     @NotBlank(message = "Name is required")
-    private String name;
+    @JsonProperty("sName")
+    private String sName;
 
-    @Email(message = "Email should be valid")
-    @NotBlank(message = "Email is required")
     private String email;
 
-    private String phone;
+    @JsonProperty("phoneNo")
+    private String phoneNo;
 
-    @NotNull(message = "Graduation year is required")
     private Integer graduationYear;
 
-    @NotNull(message = "Branch is required")
-    private Alumni.EngineeringBranch branch;
+    private EngineeringBranch branch;
 
-    private String currentPosition;
-    private String company;
-    private String location;
-    private String linkedinUrl;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    @JsonProperty("linkedinProfile")
+    private String linkedinProfile;
+    
+    private String gender;
+    
+    @JsonProperty("employment")
+    private List<EmploymentDTO> employment;
+    
+    @JsonProperty("higherStudies")
+    private List<HigherStudiesDTO> higherStudies;
 
     public AlumniDTO() {
     }
 
-    public AlumniDTO(String id, String name, String email, String phone, Integer graduationYear,
-            Alumni.EngineeringBranch branch, String currentPosition, String company,
-            String location, String linkedinUrl, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.name = name;
+    public AlumniDTO(String sId, String sName, String email, String phoneNo, Integer graduationYear,
+            EngineeringBranch branch, String linkedinProfile, String gender) {
+        this.sId = sId;
+        this.sName = sName;
         this.email = email;
-        this.phone = phone;
+        this.phoneNo = phoneNo;
         this.graduationYear = graduationYear;
         this.branch = branch;
-        this.currentPosition = currentPosition;
-        this.company = company;
-        this.location = location;
-        this.linkedinUrl = linkedinUrl;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.linkedinProfile = linkedinProfile;
+        this.gender = gender;
+        this.employment = null;
+        this.higherStudies = null;
     }
 
     // Getters and Setters
-    public String getId() {
-        return id;
+    public String getSId() {
+        return sId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setSId(String sId) {
+        this.sId = sId;
     }
 
-    public String getName() {
-        return name;
+    public String getSName() {
+        return sName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSName(String sName) {
+        this.sName = sName;
     }
 
     public String getEmail() {
@@ -77,12 +78,12 @@ public class AlumniDTO {
         this.email = email;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getPhoneNo() {
+        return phoneNo;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
     }
 
     public Integer getGraduationYear() {
@@ -93,60 +94,44 @@ public class AlumniDTO {
         this.graduationYear = graduationYear;
     }
 
-    public Alumni.EngineeringBranch getBranch() {
+    public EngineeringBranch getBranch() {
         return branch;
     }
 
-    public void setBranch(Alumni.EngineeringBranch branch) {
+    public void setBranch(EngineeringBranch branch) {
         this.branch = branch;
     }
 
-    public String getCurrentPosition() {
-        return currentPosition;
+    public String getLinkedinProfile() {
+        return linkedinProfile;
     }
 
-    public void setCurrentPosition(String currentPosition) {
-        this.currentPosition = currentPosition;
+    public void setLinkedinProfile(String linkedinProfile) {
+        this.linkedinProfile = linkedinProfile;
     }
 
-    public String getCompany() {
-        return company;
+    public String getGender() {
+        return gender;
     }
 
-    public void setCompany(String company) {
-        this.company = company;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
-
-    public String getLocation() {
-        return location;
+    
+    public List<EmploymentDTO> getEmployment() {
+        return employment;
     }
-
-    public void setLocation(String location) {
-        this.location = location;
+    
+    public void setEmployment(List<EmploymentDTO> employment) {
+        this.employment = employment;
     }
-
-    public String getLinkedinUrl() {
-        return linkedinUrl;
+    
+    public List<HigherStudiesDTO> getHigherStudies() {
+        return higherStudies;
     }
-
-    public void setLinkedinUrl(String linkedinUrl) {
-        this.linkedinUrl = linkedinUrl;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    
+    public void setHigherStudies(List<HigherStudiesDTO> higherStudies) {
+        this.higherStudies = higherStudies;
     }
 
     // Manual builder
@@ -155,26 +140,24 @@ public class AlumniDTO {
     }
 
     public static class Builder {
-        private String id;
-        private String name;
+        private String sId;
+        private String sName;
         private String email;
-        private String phone;
+        private String phoneNo;
         private Integer graduationYear;
-        private Alumni.EngineeringBranch branch;
-        private String currentPosition;
-        private String company;
-        private String location;
-        private String linkedinUrl;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
+        private EngineeringBranch branch;
+        private String linkedinProfile;
+        private String gender;
+        private List<EmploymentDTO> employment;
+        private List<HigherStudiesDTO> higherStudies;
 
-        public Builder id(String id) {
-            this.id = id;
+        public Builder sId(String sId) {
+            this.sId = sId;
             return this;
         }
 
-        public Builder name(String name) {
-            this.name = name;
+        public Builder sName(String sName) {
+            this.sName = sName;
             return this;
         }
 
@@ -183,8 +166,8 @@ public class AlumniDTO {
             return this;
         }
 
-        public Builder phone(String phone) {
-            this.phone = phone;
+        public Builder phoneNo(String phoneNo) {
+            this.phoneNo = phoneNo;
             return this;
         }
 
@@ -193,77 +176,97 @@ public class AlumniDTO {
             return this;
         }
 
-        public Builder branch(Alumni.EngineeringBranch branch) {
+        public Builder branch(EngineeringBranch branch) {
             this.branch = branch;
             return this;
         }
 
-        public Builder currentPosition(String currentPosition) {
-            this.currentPosition = currentPosition;
+        public Builder linkedinProfile(String linkedinProfile) {
+            this.linkedinProfile = linkedinProfile;
             return this;
         }
 
-        public Builder company(String company) {
-            this.company = company;
+        public Builder gender(String gender) {
+            this.gender = gender;
             return this;
         }
-
-        public Builder location(String location) {
-            this.location = location;
+        
+        public Builder employment(List<EmploymentDTO> employment) {
+            this.employment = employment;
             return this;
         }
-
-        public Builder linkedinUrl(String linkedinUrl) {
-            this.linkedinUrl = linkedinUrl;
-            return this;
-        }
-
-        public Builder createdAt(LocalDateTime createdAt) {
-            this.createdAt = createdAt;
-            return this;
-        }
-
-        public Builder updatedAt(LocalDateTime updatedAt) {
-            this.updatedAt = updatedAt;
+        
+        public Builder higherStudies(List<HigherStudiesDTO> higherStudies) {
+            this.higherStudies = higherStudies;
             return this;
         }
 
         public AlumniDTO build() {
-            return new AlumniDTO(id, name, email, phone, graduationYear, branch, currentPosition, company, location,
-                    linkedinUrl, createdAt, updatedAt);
+            AlumniDTO dto = new AlumniDTO(sId, sName, email, phoneNo, graduationYear, branch, linkedinProfile, gender);
+            dto.employment = this.employment;
+            dto.higherStudies = this.higherStudies;
+            return dto;
         }
     }
 
     // Convert DTO to Entity
     public Alumni toEntity() {
         return Alumni.builder()
-                .name(this.name)
+                .sId(this.sId)
+                .sName(this.sName)
                 .email(this.email)
-                .phone(this.phone)
+                .phoneNo(this.phoneNo)
                 .graduationYear(this.graduationYear)
                 .branch(this.branch)
-                .currentPosition(this.currentPosition)
-                .company(this.company)
-                .location(this.location)
-                .linkedinUrl(this.linkedinUrl)
+                .linkedinProfile(this.linkedinProfile)
+                .gender(this.gender)
                 .build();
     }
 
     // Convert Entity to DTO
     public static AlumniDTO fromEntity(Alumni alumni) {
+        List<EmploymentDTO> employmentDTOs = null;
+        if (alumni.getEmployments() != null && !alumni.getEmployments().isEmpty()) {
+            employmentDTOs = alumni.getEmployments().stream()
+                    .map(emp -> new EmploymentDTO(
+                            emp.getEmpId(),
+                            emp.getAlumni().getSId(),
+                            emp.getCompany() != null ? emp.getCompany().getCompanyId() : null,
+                            emp.getCompany() != null ? emp.getCompany().getCompanyName() : null,
+                            emp.getCompany() != null ? emp.getCompany().getLocation() : null,
+                            emp.getPosition(),
+                            emp.getStartDate(),
+                            emp.getEndDate()
+                    ))
+                    .toList();
+        }
+        
+        List<HigherStudiesDTO> higherStudiesDTOs = null;
+        if (alumni.getHigherStudies() != null && !alumni.getHigherStudies().isEmpty()) {
+            higherStudiesDTOs = alumni.getHigherStudies().stream()
+                    .map(hs -> new HigherStudiesDTO(
+                            hs.getHsId(),
+                            hs.getAlumni().getSId(),
+                            hs.getCollegeName(),
+                            hs.getLocation(),
+                            hs.getDomainOfStudy(),
+                            hs.getStartYear(),
+                            hs.getEndYear()
+                    ))
+                    .toList();
+        }
+        
         return AlumniDTO.builder()
-                .id(alumni.getId())
-                .name(alumni.getName())
+                .sId(alumni.getSId())
+                .sName(alumni.getSName())
                 .email(alumni.getEmail())
-                .phone(alumni.getPhone())
+                .phoneNo(alumni.getPhoneNo())
                 .graduationYear(alumni.getGraduationYear())
                 .branch(alumni.getBranch())
-                .currentPosition(alumni.getCurrentPosition())
-                .company(alumni.getCompany())
-                .location(alumni.getLocation())
-                .linkedinUrl(alumni.getLinkedinUrl())
-                .createdAt(alumni.getCreatedAt())
-                .updatedAt(alumni.getUpdatedAt())
+                .linkedinProfile(alumni.getLinkedinProfile())
+                .gender(alumni.getGender())
+                .employment(employmentDTOs)
+                .higherStudies(higherStudiesDTOs)
                 .build();
     }
 }

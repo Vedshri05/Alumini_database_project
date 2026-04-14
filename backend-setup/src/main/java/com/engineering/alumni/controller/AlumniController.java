@@ -3,6 +3,7 @@ package com.engineering.alumni.controller;
 import com.engineering.alumni.dto.AlumniDTO;
 import com.engineering.alumni.dto.ApiResponse;
 import com.engineering.alumni.entity.Alumni;
+import com.engineering.alumni.entity.EngineeringBranch;
 import com.engineering.alumni.service.AlumniService;
 import jakarta.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,7 +50,7 @@ public class AlumniController {
      */
     @PostMapping
     public ResponseEntity<ApiResponse<AlumniDTO>> createAlumni(@Valid @RequestBody AlumniDTO alumniDTO) {
-        log.info("POST /api/alumni - Creating new alumni: {}", alumniDTO.getName());
+        log.info("POST /api/alumni - Creating new alumni: {}", alumniDTO.getSName());
         AlumniDTO createdAlumni = alumniService.createAlumni(alumniDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success("Alumni created successfully", createdAlumni));
@@ -82,10 +83,16 @@ public class AlumniController {
      */
     @GetMapping("/branch/{branch}")
     public ResponseEntity<ApiResponse<List<AlumniDTO>>> getAlumniByBranch(
-            @PathVariable Alumni.EngineeringBranch branch) {
+            @PathVariable String branch) {
         log.info("GET /api/alumni/branch/{} - Fetching alumni by branch", branch);
-        List<AlumniDTO> alumni = alumniService.getAlumniByBranch(branch);
-        return ResponseEntity.ok(ApiResponse.success("Alumni by branch fetched successfully", alumni));
+        try {
+            EngineeringBranch branchEnum = EngineeringBranch.valueOf(branch.toUpperCase().replace(" ", "_"));
+            List<AlumniDTO> alumni = alumniService.getAlumniByBranch(branchEnum);
+            return ResponseEntity.ok(ApiResponse.success("Alumni by branch fetched successfully", alumni));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Invalid branch: " + branch + ". Valid options: CS, IT, ENTC, ECE, AIDS"));
+        }
     }
 
     /**
